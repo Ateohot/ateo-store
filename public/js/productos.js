@@ -124,9 +124,37 @@ const productos = [
         ],
 
         tiktok: "#"
+    },
+
+    {
+        nombre: "Br Mods Root",
+
+        descripcion: "Membresía Br Mods Root",
+
+        imagen: "images/br-mods-root.jpg",
+
+        precios: [
+            {
+                duracion: "1 día",
+                precio: "$3"
+            },
+            {
+                duracion: "7 días",
+                precio: "$6"
+            },
+            {
+                duracion: "15 días",
+                precio: "$10"
+            },
+            {
+                duracion: "30 días",
+                precio: "$15"
+            }
+        ],
+
+        tiktok: "#"
     }
 ];
-
 const contenedor = document.getElementById("productos");
 
 if (contenedor) {
