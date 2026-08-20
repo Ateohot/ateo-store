@@ -48,7 +48,7 @@ const productos = [
             }
         ],
 
-                tiktok: "#"
+                tiktok: "https://vt.tiktok.com/ZSVDM77Hm/"
     },
 
     {
