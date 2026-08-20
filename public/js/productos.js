@@ -153,91 +153,24 @@ const productos = [
         ],
 
         tiktok: "#"
+    },
+    {
+        nombre: "FLUORITE",
+        descripcion: "",
+        imagen: "images/fluorite.jpg",
+        precios: [
+            {
+                duracion: "1 Día",
+                precio: "5$"
+            },
+            {
+                duracion: "7 días",
+                precio: "15$"
+            },
+            {
+                duracion: "30 días",
+                precio: "35$"
+            }
+        ]
     }
 ];
-const contenedor = document.getElementById("productos");
-
-if (contenedor) {
-
-    productos.forEach(producto => {
-
-        const tarjeta = document.createElement("article");
-
-        tarjeta.className = "producto";
-
-        let planesHTML = "";
-
-        producto.precios.forEach(plan => {
-
-            const mensaje =
-                `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
-
-            const whatsapp =
-                `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-
-            planesHTML += `
-                <div class="plan">
-
-                    <div>
-                        <span class="duracion">
-                            ${plan.duracion}
-                        </span>
-
-                        <strong>
-                            ${plan.precio}
-                        </strong>
-                    </div>
-
-                    <a
-                        class="comprar"
-                        href="${whatsapp}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        COMPRAR
-                    </a>
-
-                </div>
-            `;
-        });
-
-        tarjeta.innerHTML = `
-            <div class="imagen-producto">
-
-                <img
-                    src="${producto.imagen}"
-                    alt="${producto.nombre}"
-                    onerror="this.style.display='none'"
-                >
-
-            </div>
-
-            <div class="producto-info">
-
-                <span class="categoria">
-                    MEMBRESÍA
-                </span>
-
-                <h2>
-                    ${producto.nombre}
-                </h2>
-
-                ${planesHTML}
-
-                <a
-                    href="${producto.tiktok}"
-                    class="tiktok"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <span>♪</span>
-                    Ver vídeo del producto en TikTok
-                </a>
-
-            </div>
-        `;
-
-        contenedor.appendChild(tarjeta);
-
-    });
-}
