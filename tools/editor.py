@@ -229,7 +229,8 @@ def editar(datos):
             print("\n1. Reemplazar todos")
             print("2. Agregar duración")
             print("3. Eliminar duración")
-            print("4. Volver")
+            print("4. Editar duración")
+            print("5. Volver")
 
             sub = input("\nSelecciona una opción: ").strip()
 
@@ -282,6 +283,40 @@ def editar(datos):
                         print("Duración inválida.")
 
             elif sub == "4":
+                precios = producto.get("precios", [])
+
+                if not precios:
+                    print("No hay duraciones para editar.")
+                    continue
+
+                try:
+                    numero_precio = int(
+                        input("Número de duración a editar: ")
+                    )
+
+                    precio_actual = precios[numero_precio - 1]
+
+                except (ValueError, IndexError):
+                    print("Duración inválida.")
+                    continue
+
+                nueva_duracion = input(
+                    f"Duración [{precio_actual["duracion"]}]: "
+                ).strip()
+
+                nuevo_precio = input(
+                    f"Precio [{precio_actual["precio"]}]: "
+                ).strip()
+
+                if nueva_duracion:
+                    precio_actual["duracion"] = nueva_duracion
+
+                if nuevo_precio:
+                    precio_actual["precio"] = nuevo_precio
+
+                print("Duración actualizada.")
+
+            elif sub == "5":
                 continue
 
         elif opcion == "5":
