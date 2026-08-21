@@ -1,49 +1,68 @@
+import json
 from pathlib import Path
 
-PRODUCTOS = Path("public/js/productos.js")
+BASE = Path(__file__).resolve().parent.parent
+DATOS = BASE / "tools" / "productos.json"
+SALIDA = BASE / "public" / "js" / "productos.js"
 
 
-def leer():
-    if not PRODUCTOS.exists():
-        print("No se encontró productos.js")
-        return ""
+def cargar():
+    if not DATOS.exists():
+        return {"productos": []}
 
-    return PRODUCTOS.read_text(encoding="utf-8")
-
-
-def mostrar():
-    texto = leer()
-
-    print("\n===== PRODUCTOS =====\n")
-
-    encontrados = False
-
-    for linea in texto.splitlines():
-        linea = linea.strip()
-
-        if linea.startswith("nombre:"):
-            print(linea)
-            encontrados = True
-
-    if not encontrados:
-        print("No hay productos.")
+    try:
+        return json.loads(DATOS.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        print("\nError: productos.json no es válido.")
+        return {"productos": []}
 
 
-def agregar():
-    print("\n===== NUEVO PRODUCTO =====\n")
+def guardar(datos):
+    DATOS.write_text(
+        json.dumps(datos, ensure_ascii=False, indent=4),
+        encoding="utf-8"
+    )
+
+
+def listar(datos):
+    productos = datos["productos"]
+
+    print("\n===== ATEO STORE =====\n")
+
+    if not productos:
+        print("No hay productos guardados.")
+        return
+
+    for i, producto in enumerate(productos, 1):
+        print(f"{i}. {producto['nombre']}")
+
+        for precio in producto.get("precios", []):
+            print(
+                f"   - {precio['duracion']}: "
+                f"{precio['precio']}"
+            )
+
+
+def agregar(datos):
+    print("\n===== AGREGAR PRODUCTO =====\n")
 
     nombre = input("Nombre: ").strip()
     descripcion = input("Descripción: ").strip()
     imagen = input("Imagen: ").strip()
+    tiktok = input("TikTok: ").strip() or "#"
 
-    if not nombre or not imagen:
-        print("\nNombre e imagen son obligatorios.")
+    if not nombre:
+        print("El nombre es obligatorio.")
+        return
+
+    if not imagen:
+        print("La imagen es obligatoria.")
         return
 
     precios = []
 
-    print("\nAgrega los precios uno por uno.")
-    print("Cuando termines, deja Duración vacía.\n")
+    print("\nPRECIOS")
+    print("Deja Duración vacía para terminar.\n")
 
     while True:
         duracion = input("Duración: ").strip()
@@ -63,51 +82,168 @@ def agregar():
         })
 
     if not precios:
-        print("\nDebes agregar al menos un precio.")
+        print("Debes agregar al menos un precio.")
         return
 
-    nuevo = "    {\n"
-    nuevo += f'        nombre: "{nombre}",\n'
-    nuevo += f'        descripcion: "{descripcion}",\n'
-    nuevo += f'        imagen: "{imagen}",\n'
-    nuevo += "        precios: [\n"
+    datos["productos"].append({
+        "nombre": nombre,
+        "descripcion": descripcion,
+        "imagen": imagen,
+        "precios": precios,
+        "tiktok": tiktok
+    })
 
-    for i, p in enumerate(precios):
-        nuevo += "            {\n"
-        nuevo += f'                duracion: "{p["duracion"]}",\n'
-        nuevo += f'                precio: "{p["precio"]}"\n'
-        nuevo += "            }"
+    guardar(datos)
 
-        if i < len(precios) - 1:
-            nuevo += ","
+    print("\nProducto guardado en productos.json.")
+    print("Todavía NO se modificó productos.js.")
 
-        nuevo += "\n"
 
-    nuevo += "        ]\n"
-    nuevo += "    }"
+def eliminar(datos):
+    listar(datos)
 
-    texto = leer()
-
-    posicion = texto.rfind("];")
-
-    if posicion == -1:
-        print("\nNo se encontró el formato esperado de productos.js.")
+    if not datos["productos"]:
         return
 
-    antes = texto[:posicion].rstrip()
+    try:
+        numero = int(input("\nNúmero del producto: "))
+        producto = datos["productos"][numero - 1]
+    except (ValueError, IndexError):
+        print("Producto inválido.")
+        return
 
-    if not antes.endswith("["):
-        antes += ","
+    confirmar = input(
+        f'¿Eliminar "{producto["nombre"]}"? (s/n): '
+    ).lower()
 
-    texto = antes + "\n" + nuevo + "\n];\n"
+    if confirmar == "s":
+        datos["productos"].pop(numero - 1)
+        guardar(datos)
+        print("Producto eliminado de productos.json.")
 
-    PRODUCTOS.write_text(texto, encoding="utf-8")
 
-    print("\nProducto agregado correctamente.")
+def generar(datos):
+    productos = datos["productos"]
+
+    if not productos:
+        print("\nNo hay productos para generar.")
+        return
+
+    respaldo = SALIDA.with_suffix(".js.backup")
+
+    if SALIDA.exists():
+        respaldo.write_text(
+            SALIDA.read_text(encoding="utf-8"),
+            encoding="utf-8"
+        )
+
+    texto = 'const WHATSAPP = "50586058362";\n\n'
+    texto += "const productos = "
+    texto += json.dumps(
+        productos,
+        ensure_ascii=False,
+        indent=4
+    )
+    texto += ";\n"
+
+    texto += """
+const contenedor = document.getElementById("productos");
+
+if (contenedor) {
+
+    productos.forEach(producto => {
+
+        const tarjeta = document.createElement("article");
+
+        tarjeta.className = "producto";
+
+        let planesHTML = "";
+
+        producto.precios.forEach(plan => {
+
+            const mensaje =
+                `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
+
+            const whatsapp =
+                `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+
+            planesHTML += `
+                <div class="plan">
+
+                    <div class="plan-info">
+                        <span>
+                            ${plan.duracion}
+                        </span>
+
+                        <strong>
+                            ${plan.precio}
+                        </strong>
+                    </div>
+
+                    <a
+                        class="comprar"
+                        href="${whatsapp}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        COMPRAR
+                    </a>
+
+                </div>
+            `;
+        });
+
+        tarjeta.innerHTML = `
+            <div class="imagen-producto">
+
+                <img
+                    src="${producto.imagen}"
+                    alt="${producto.nombre}"
+                    onerror="this.style.display='none'"
+                >
+
+            </div>
+
+            <div class="producto-info">
+
+                <span class="categoria">
+                    MEMBRESÍA
+                </span>
+
+                <h2>
+                    ${producto.nombre}
+                </h2>
+
+                ${planesHTML}
+
+                <a
+                    href="${producto.tiktok}"
+                    class="tiktok"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <span>♪</span>
+                    Ver vídeo del producto en TikTok
+                </a>
+
+            </div>
+        `;
+
+        contenedor.appendChild(tarjeta);
+
+    });
+}
+"""
+
+    SALIDA.write_text(texto, encoding="utf-8")
+
+    print("\nproductos.js generado correctamente.")
+    print(f"Respaldo creado en: {respaldo}")
 
 
 def menu():
     while True:
+
         print("""
 =========================
        ATEO STORE
@@ -115,18 +251,28 @@ def menu():
 
 1. Ver productos
 2. Agregar producto
-3. Salir
+3. Eliminar producto
+4. Generar productos.js
+5. Salir
 """)
 
         opcion = input("Selecciona una opción: ").strip()
 
+        datos = cargar()
+
         if opcion == "1":
-            mostrar()
+            listar(datos)
 
         elif opcion == "2":
-            agregar()
+            agregar(datos)
 
         elif opcion == "3":
+            eliminar(datos)
+
+        elif opcion == "4":
+            generar(datos)
+
+        elif opcion == "5":
             print("Saliendo...")
             break
 
