@@ -130,7 +130,7 @@ const productos = [
         "tiktok": "#"
     },
     {
-        "nombre": "Fluorite",
+        "nombre": "FLUORITE",
         "descripcion": "",
         "imagen": "images/fluorite.jpg",
         "precios": [
