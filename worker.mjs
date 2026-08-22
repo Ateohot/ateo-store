@@ -86,9 +86,13 @@ export default {
           ok: true,
           mensaje: "Producto actualizado"
         });
-      } catch {
+      } catch (error) {
         return Response.json(
-          { ok: false, mensaje: "Error al actualizar producto" },
+          {
+            ok: false,
+            mensaje: "Error al actualizar producto",
+            error: String(error?.message || error)
+          },
           { status: 500 }
         );
       }
