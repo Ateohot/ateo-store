@@ -56,6 +56,72 @@ export default {
       });
     }
 
+
+    if (url.pathname === "/api/productos" && request.method === "PUT") {
+      try {
+        const body = await request.json();
+
+        if (!body.id || !body.nombre || !body.precios) {
+          return Response.json(
+            { ok: false, mensaje: "Faltan datos" },
+            { status: 400 }
+          );
+        }
+
+        await env.DB
+          .prepare(
+            "UPDATE productos SET nombre = ?, descripcion = ?, imagen = ?, precios = ?, tiktok = ? WHERE id = ?"
+          )
+          .bind(
+            body.nombre,
+            body.descripcion || "",
+            body.imagen || "",
+            JSON.stringify(body.precios),
+            body.tiktok || "#",
+            body.id
+          )
+          .run();
+
+        return Response.json({
+          ok: true,
+          mensaje: "Producto actualizado"
+        });
+      } catch {
+        return Response.json(
+          { ok: false, mensaje: "Error al actualizar producto" },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (url.pathname === "/api/productos" && request.method === "DELETE") {
+      try {
+        const body = await request.json();
+
+        if (!body.id) {
+          return Response.json(
+            { ok: false, mensaje: "Falta el id" },
+            { status: 400 }
+          );
+        }
+
+        await env.DB
+          .prepare("DELETE FROM productos WHERE id = ?")
+          .bind(body.id)
+          .run();
+
+        return Response.json({
+          ok: true,
+          mensaje: "Producto eliminado"
+        });
+      } catch {
+        return Response.json(
+          { ok: false, mensaje: "Error al eliminar producto" },
+          { status: 500 }
+        );
+      }
+    }
+
     return env.ASSETS.fetch(request);
   }
 };
