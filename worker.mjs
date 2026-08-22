@@ -34,6 +34,48 @@ export default {
       }
     }
 
+    if (url.pathname === "/api/productos" && request.method === "POST") {
+      try {
+        const body = await request.json();
+
+        if (!body.nombre || !body.precios) {
+          return Response.json(
+            { ok: false, mensaje: "Faltan datos" },
+            { status: 400 }
+          );
+        }
+
+        const resultado = await env.DB
+          .prepare(
+            "INSERT INTO productos (nombre, descripcion, imagen, precios, tiktok) VALUES (?, ?, ?, ?, ?)"
+          )
+          .bind(
+            body.nombre,
+            body.descripcion || "",
+            body.imagen || "",
+            JSON.stringify(body.precios),
+            body.tiktok || "#"
+          )
+          .run();
+
+        return Response.json({
+          ok: true,
+          mensaje: "Producto creado",
+          id: resultado.meta.last_row_id
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            ok: false,
+            mensaje: "Error al crear producto",
+            error: error.message
+          },
+          { status: 500 }
+        );
+      }
+    }
+
     if (url.pathname === "/api/productos" && request.method === "GET") {
       const { results } = await env.DB
         .prepare(
