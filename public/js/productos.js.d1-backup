@@ -1,0 +1,54 @@
+async function cargarProductos() {
+    const contenedor = document.getElementById("productos");
+
+    try {
+        const respuesta = await fetch("/api/productos");
+
+        if (!respuesta.ok) {
+            throw new Error("Error HTTP " + respuesta.status);
+        }
+
+        const datos = await respuesta.json();
+
+        if (!datos.ok) {
+            throw new Error("No se pudieron cargar los productos");
+        }
+
+        const productos = datos.productos;
+
+        contenedor.innerHTML = "";
+
+        productos.forEach(producto => {
+            const tarjeta = document.createElement("div");
+            tarjeta.className = "producto";
+
+            const precios = producto.precios
+                .map(p => `${p.duracion} - ${p.precio}`)
+                .join("<br>");
+
+            tarjeta.innerHTML = `
+                <img src="${producto.imagen}" alt="${producto.nombre}">
+                <h2>${producto.nombre}</h2>
+                ${producto.descripcion
+                    ? `<p>${producto.descripcion}</p>`
+                    : ""}
+                <div class="precios">
+                    ${precios}
+                </div>
+                ${producto.tiktok && producto.tiktok !== "#"
+                    ? `<a href="${producto.tiktok}" target="_blank">TikTok</a>`
+                    : ""}
+            `;
+
+            contenedor.appendChild(tarjeta);
+        });
+
+    } catch (error) {
+        console.error("Error cargando productos:", error);
+
+        contenedor.innerHTML =
+            "<p>No se pudieron cargar los productos.</p>";
+    }
+}
+
+cargarProductos();
