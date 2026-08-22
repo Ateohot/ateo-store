@@ -1,0 +1,12 @@
+node_modules/
+*.apk
+*.aab
+.gradle/
+build/
+**/build/
+local.properties
+*.bak
+*.bak2
+*.bak3
+__pycache__/
+.DS_Store

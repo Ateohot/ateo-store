@@ -1,0 +1,21 @@
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/productos" && request.method === "GET") {
+      return Response.json({
+        ok: true,
+        productos: [{"nombre":"Drip Mobile No Root","imagen":"images/drip-client.jpg","precios":[{"duracion":"7 días","precio":"$8"},{"duracion":"30 días","precio":"$16"}],"tiktok":"#"},{"nombre":"PatoTeam FF","imagen":"images/patoteam-ff.jpg","precios":[{"duracion":"1 día","precio":"$3"},{"duracion":"3 días","precio":"$5"},{"duracion":"7 días","precio":"$8"},{"duracion":"15 días","precio":"$10"},{"duracion":"30 días","precio":"$15"}],"tiktok":"https://vt.tiktok.com/ZSVDM77Hm/"},{"nombre":"Cuban Mods Store","descripcion":"Más de 50 juegos disponibles","imagen":"images/cuban-mods-store.jpg","precios":[{"duracion":"1 día","precio":"$3"},{"duracion":"7 días","precio":"$8"},{"duracion":"15 días","precio":"$10"},{"duracion":"30 días","precio":"$15"}],"tiktok":"#"},{"nombre":"HG CHEATS","imagen":"images/hg-cheats.jpg","precios":[{"duracion":"1 día","precio":"$3"},{"duracion":"10 días","precio":"$8"},{"duracion":"30 días","precio":"$15"}],"tiktok":"#"},{"nombre":"EXTERNAL iOS FUL PARA CUENTA PRINCIPAL","imagen":"images/external-ios-ful.jpg","precios":[{"duracion":"1 día","precio":"$4"},{"duracion":"7 días","precio":"$10"},{"duracion":"30 días","precio":"$18"}],"tiktok":"#"},{"nombre":"Br Mods Root","descripcion":"Membresía Br Mods Root","imagen":"images/br-mods-root.jpg","precios":[{"duracion":"1 día","precio":"$3"},{"duracion":"7 días","precio":"$6"},{"duracion":"15 días","precio":"$10"},{"duracion":"30 días","precio":"$15"}],"tiktok":"#"},{"nombre":"Fluorite","descripcion":"","imagen":"images/fluorite.jpg","precios":[{"duracion":"1 Día","precio":"5 $"},{"duracion":"7 Dias","precio":"15 $"},{"duracion":"30 Dias","precio":"35 $"}],"tiktok":"#"}]
+      });
+    }
+
+    if (url.pathname === "/api/login" && request.method === "POST") {
+      return Response.json({
+        ok: false,
+        mensaje: "El sistema de autenticación se configurará con D1"
+      }, { status: 503 });
+    }
+
+    return env.ASSETS.fetch(request);
+  }
+};
