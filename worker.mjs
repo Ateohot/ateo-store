@@ -10,10 +10,30 @@ export default {
     }
 
     if (url.pathname === "/api/login" && request.method === "POST") {
-      return Response.json({
-        ok: false,
-        mensaje: "El sistema de autenticación se configurará con D1"
-      }, { status: 503 });
+      try {
+        const body = await request.json();
+
+        if (
+          body.usuario === "admin" &&
+          body.password === "ateo123"
+        ) {
+          return Response.json({
+            ok: true,
+            mensaje: "Login correcto"
+          });
+        }
+
+        return Response.json({
+          ok: false,
+          mensaje: "Usuario o contraseña incorrectos"
+        }, { status: 401 });
+
+      } catch {
+        return Response.json({
+          ok: false,
+          mensaje: "JSON inválido"
+        }, { status: 400 });
+      }
     }
 
     return env.ASSETS.fetch(request);
