@@ -117,7 +117,7 @@ async function cargarProductos() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    VER TIKTOK
+                                    VER VIDEO
                                 </a>
                               `
                             : ""
