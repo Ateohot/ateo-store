@@ -2,6 +2,13 @@
   "name": "ateo-store",
   "main": "worker.mjs",
   "compatibility_date": "2026-08-15",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ateo-store-db",
+      "database_id": "203248a0-54ca-48ba-ad6a-8fec6bf41701"
+    }
+  ],
   "assets": {
     "directory": "./public"
   }
