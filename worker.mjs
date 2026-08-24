@@ -34,9 +34,16 @@ export default {
         const nombre =
           `${Date.now()}${extension}`;
 
+        const datosImagen =
+          await archivo.arrayBuffer();
+
+        if (!datosImagen.byteLength) {
+          throw new Error("La imagen recibida está vacía");
+        }
+
         await env.IMAGENES.put(
           nombre,
-          archivo.stream(),
+          datosImagen,
           {
             httpMetadata: {
               contentType:
