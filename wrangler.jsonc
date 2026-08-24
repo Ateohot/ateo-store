@@ -11,5 +11,11 @@
   ],
   "assets": {
     "directory": "./public"
-  }
+  },
+  "kv_namespaces": [
+    {
+      "binding": "IMAGENES",
+      "id": "cf777626d22b4d4385aebcde47c78093"
+    }
+  ]
 }

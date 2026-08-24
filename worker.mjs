@@ -2,6 +2,114 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // =========================
+    // IMÁGENES
+    // =========================
+
+    if (
+      url.pathname === "/api/upload-image" &&
+      request.method === "POST"
+    ) {
+      try {
+        const formData = await request.formData();
+        const archivo = formData.get("imagen");
+
+        if (!(archivo instanceof File)) {
+          return Response.json(
+            {
+              ok: false,
+              mensaje: "No se recibió ninguna imagen"
+            },
+            { status: 400 }
+          );
+        }
+
+        const extension =
+          archivo.name.includes(".")
+            ? archivo.name.substring(
+                archivo.name.lastIndexOf(".")
+              ).toLowerCase()
+            : ".jpg";
+
+        const nombre =
+          `${Date.now()}${extension}`;
+
+        await env.IMAGENES.put(
+          nombre,
+          archivo.stream(),
+          {
+            httpMetadata: {
+              contentType:
+                archivo.type || "image/jpeg",
+              cacheControl:
+                "public, max-age=31536000"
+            }
+          }
+        );
+
+        return Response.json({
+          ok: true,
+          nombre,
+          imagen:
+            `${url.origin}/images/${encodeURIComponent(nombre)}`
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            ok: false,
+            mensaje: "Error al guardar imagen",
+            error: String(
+              error?.message || error
+            )
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (
+      url.pathname.startsWith("/images/") &&
+      request.method === "GET"
+    ) {
+      const nombre = decodeURIComponent(
+        url.pathname.substring("/images/".length)
+      );
+
+      if (!nombre || nombre.includes("..")) {
+        return new Response("Imagen no válida", {
+          status: 400
+        });
+      }
+
+      const objeto =
+        await env.IMAGENES.get(
+          nombre,
+          { type: "stream" }
+        );
+
+      if (!objeto) {
+        return new Response(
+          "Imagen no encontrada",
+          { status: 404 }
+        );
+      }
+
+      return new Response(
+        objeto.body,
+        {
+          headers: {
+            "Content-Type":
+              objeto.metadata?.contentType ||
+              "image/jpeg",
+            "Cache-Control":
+              objeto.metadata?.cacheControl ||
+              "public, max-age=31536000"
+          }
+        }
+      );
+    }
+
     if (url.pathname === "/api/login" && request.method === "POST") {
       try {
         const body = await request.json();
