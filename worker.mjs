@@ -37,7 +37,9 @@ export default {
         const datosImagen =
           await archivo.arrayBuffer();
 
-        if (!datosImagen.byteLength) {
+        const bytesRecibidos = datosImagen.byteLength;
+
+        if (!bytesRecibidos) {
           throw new Error("La imagen recibida está vacía");
         }
 
@@ -58,7 +60,8 @@ export default {
           ok: true,
           nombre,
           imagen:
-            `${url.origin}/images/${encodeURIComponent(nombre)}`
+            `${url.origin}/images/${encodeURIComponent(nombre)}`,
+          bytesRecibidos
         });
 
       } catch (error) {
