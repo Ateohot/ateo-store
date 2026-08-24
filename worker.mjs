@@ -60,8 +60,7 @@ export default {
           ok: true,
           nombre,
           imagen:
-            `${url.origin}/images/${encodeURIComponent(nombre)}`,
-          bytesRecibidos
+            `${url.origin}/images/${encodeURIComponent(nombre)}`
         });
 
       } catch (error) {
