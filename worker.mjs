@@ -92,13 +92,13 @@ export default {
         });
       }
 
-      const objeto =
-        await env.IMAGENES.get(
+      const resultado =
+        await env.IMAGENES.getWithMetadata(
           nombre,
-          { type: "stream" }
+          { type: "arrayBuffer" }
         );
 
-      if (!objeto) {
+      if (!resultado.value) {
         return new Response(
           "Imagen no encontrada",
           { status: 404 }
@@ -106,14 +106,14 @@ export default {
       }
 
       return new Response(
-        objeto.body,
+        resultado.value,
         {
           headers: {
             "Content-Type":
-              objeto.metadata?.contentType ||
+              resultado.metadata?.contentType ||
               "image/jpeg",
             "Cache-Control":
-              objeto.metadata?.cacheControl ||
+              resultado.metadata?.cacheControl ||
               "public, max-age=31536000"
           }
         }
