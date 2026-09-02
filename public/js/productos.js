@@ -1,33 +1,12 @@
 const WHATSAPP = "50586058362";
 
-async function cargarProductos() {
+let productosDisponibles = [];
+
+function mostrarProductos(productos) {
 
     const contenedor = document.getElementById("productos");
 
     if (!contenedor) return;
-
-    try {
-
-        const respuesta =
-            await fetch("/api/productos");
-
-        if (!respuesta.ok) {
-            throw new Error(
-                "Error HTTP " + respuesta.status
-            );
-        }
-
-        const datos =
-            await respuesta.json();
-
-        if (!datos.ok) {
-            throw new Error(
-                "No se pudieron cargar los productos"
-            );
-        }
-
-        const productos =
-            datos.productos;
 
         contenedor.innerHTML = "";
 
@@ -129,6 +108,36 @@ async function cargarProductos() {
             contenedor.appendChild(tarjeta);
         });
 
+}
+
+
+async function cargarProductos() {
+
+    try {
+
+        const respuesta =
+            await fetch("/api/productos");
+
+        if (!respuesta.ok) {
+            throw new Error(
+                "Error HTTP " + respuesta.status
+            );
+        }
+
+        const datos =
+            await respuesta.json();
+
+        if (!datos.ok) {
+            throw new Error(
+                "No se pudieron cargar los productos"
+            );
+        }
+
+        productosDisponibles =
+            datos.productos;
+
+        mostrarProductos(productosDisponibles);
+
     } catch (error) {
 
         console.error(
@@ -136,9 +145,46 @@ async function cargarProductos() {
             error
         );
 
-        contenedor.innerHTML =
-            "<p>No se pudieron cargar los productos.</p>";
+        const contenedor =
+            document.getElementById("productos");
+
+        if (contenedor) {
+            contenedor.innerHTML =
+                "<p>No se pudieron cargar los productos.</p>";
+        }
     }
 }
 
+function filtrarProductos(texto) {
+
+    const busqueda =
+        texto.trim().toLowerCase();
+
+    const productosFiltrados =
+        productosDisponibles.filter(producto =>
+            producto.nombre
+                .toLowerCase()
+                .includes(busqueda)
+        );
+
+    mostrarProductos(productosFiltrados);
+}
+
 cargarProductos();
+
+
+const buscador =
+    document.getElementById("busquedaProductos");
+
+if (buscador) {
+
+    buscador.addEventListener("input", () => {
+
+        filtrarProductos(
+            buscador.value
+        );
+
+    });
+
+}
+

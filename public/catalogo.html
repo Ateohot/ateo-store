@@ -17,6 +17,47 @@
         href="style.css"
     >
 
+
+<style>
+    .buscador-productos {
+        width: min(92%, 600px);
+        margin: 25px auto 35px;
+        position: relative;
+    }
+
+    .buscador-productos .icono-busqueda {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        pointer-events: none;
+    }
+
+    .buscador-productos input#busquedaProductos {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 14px 18px 14px 48px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 14px;
+        background: rgba(20, 20, 20, 0.75);
+        color: #fff;
+        font-size: 16px;
+        outline: none;
+        transition: 0.25s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .buscador-productos input#busquedaProductos::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+    }
+
+    .buscador-productos input#busquedaProductos:focus {
+        border-color: rgba(255, 255, 255, 0.45);
+        box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+    }
+</style>
+
 </head>
 
 
@@ -59,6 +100,20 @@
 
         </div>
 
+
+
+        <div class="buscador-productos">
+
+            <span class="icono-busqueda">🔍</span>
+
+            <input
+                type="search"
+                id="busquedaProductos"
+                placeholder="Buscar productos..."
+                autocomplete="off"
+            >
+
+        </div>
 
 
         <!--
