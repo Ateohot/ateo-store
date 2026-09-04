@@ -155,23 +155,41 @@ export default {
       try {
         const body = await request.json();
 
-        if (!body.nombre || !body.precios) {
+        const esGratis = Boolean(body.gratis);
+
+        if (!body.nombre) {
           return Response.json(
-            { ok: false, mensaje: "Faltan datos" },
+            { ok: false, mensaje: "El nombre es obligatorio" },
+            { status: 400 }
+          );
+        }
+
+        if (!esGratis && !body.precios) {
+          return Response.json(
+            { ok: false, mensaje: "Los precios son obligatorios para productos de pago" },
+            { status: 400 }
+          );
+        }
+
+        if (esGratis && !body.urlGratis) {
+          return Response.json(
+            { ok: false, mensaje: "La URL de obtención es obligatoria para productos gratis" },
             { status: 400 }
           );
         }
 
         const resultado = await env.DB
           .prepare(
-            "INSERT INTO productos (nombre, descripcion, imagen, precios, tiktok) VALUES (?, ?, ?, ?, ?)"
+            "INSERT INTO productos (nombre, descripcion, imagen, precios, tiktok, gratis, urlGratis) VALUES (?, ?, ?, ?, ?, ?, ?)"
           )
           .bind(
             body.nombre,
             body.descripcion || "",
             body.imagen || "",
-            JSON.stringify(body.precios),
-            body.tiktok || "#"
+            JSON.stringify(body.precios || []),
+            body.tiktok || "#",
+            body.gratis ? 1 : 0,
+            body.urlGratis || ""
           )
           .run();
 
@@ -196,7 +214,7 @@ export default {
     if (url.pathname === "/api/productos" && request.method === "GET") {
       const { results } = await env.DB
         .prepare(
-          "SELECT id, nombre, descripcion, imagen, precios, tiktok FROM productos ORDER BY id"
+          "SELECT id, nombre, descripcion, imagen, precios, tiktok, gratis, urlGratis FROM productos ORDER BY id"
         )
         .all();
 
@@ -206,7 +224,9 @@ export default {
         descripcion: p.descripcion || "",
         imagen: p.imagen || "",
         precios: JSON.parse(p.precios),
-        tiktok: p.tiktok || "#"
+        tiktok: p.tiktok || "#",
+        gratis: Boolean(p.gratis),
+        urlGratis: p.urlGratis || ""
       }));
 
       return Response.json({
@@ -220,23 +240,41 @@ export default {
       try {
         const body = await request.json();
 
-        if (!body.id || !body.nombre || !body.precios) {
+        const esGratis = Boolean(body.gratis);
+
+        if (!body.id || !body.nombre) {
           return Response.json(
-            { ok: false, mensaje: "Faltan datos" },
+            { ok: false, mensaje: "ID y nombre son obligatorios" },
+            { status: 400 }
+          );
+        }
+
+        if (!esGratis && !body.precios) {
+          return Response.json(
+            { ok: false, mensaje: "Los precios son obligatorios para productos de pago" },
+            { status: 400 }
+          );
+        }
+
+        if (esGratis && !body.urlGratis) {
+          return Response.json(
+            { ok: false, mensaje: "La URL de obtención es obligatoria para productos gratis" },
             { status: 400 }
           );
         }
 
         await env.DB
           .prepare(
-            "UPDATE productos SET nombre = ?, descripcion = ?, imagen = ?, precios = ?, tiktok = ? WHERE id = ?"
+            "UPDATE productos SET nombre = ?, descripcion = ?, imagen = ?, precios = ?, tiktok = ?, gratis = ?, urlGratis = ? WHERE id = ?"
           )
           .bind(
             body.nombre,
             body.descripcion || "",
             body.imagen || "",
-            JSON.stringify(body.precios),
+            JSON.stringify(body.precios || []),
             body.tiktok || "#",
+            body.gratis ? 1 : 0,
+            body.urlGratis || "",
             body.id
           )
           .run();

@@ -20,41 +20,76 @@ function mostrarProductos(productos) {
 
             let planesHTML = "";
 
-            producto.precios.forEach(plan => {
+            if (producto.gratis) {
 
-                const mensaje =
-                    `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
+                if (producto.urlGratis) {
 
-                const whatsapp =
-                    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+                    planesHTML = `
+                        <div class="plan">
 
-                planesHTML += `
-                    <div class="plan">
+                            <div class="plan-info">
 
-                        <div class="plan-info">
+                                <span>
+                                    GRATIS
+                                </span>
 
-                            <span>
-                                ${plan.duracion}
-                            </span>
+                            </div>
 
-                            <strong>
-                                ${plan.precio}
-                            </strong>
+                            <a
+                                class="comprar"
+                                href="${producto.urlGratis}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                OBTENER GRATIS
+                            </a>
 
                         </div>
+                    `;
+                }
 
-                        <a
-                            class="comprar"
-                            href="${whatsapp}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            COMPRAR
-                        </a>
+            } else {
 
-                    </div>
-                `;
-            });
+                const precios = Array.isArray(producto.precios)
+                    ? producto.precios
+                    : [];
+
+                precios.forEach(plan => {
+
+                    const mensaje =
+                        `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
+
+                    const whatsapp =
+                        `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+
+                    planesHTML += `
+                        <div class="plan">
+
+                            <div class="plan-info">
+
+                                <span>
+                                    ${plan.duracion}
+                                </span>
+
+                                <strong>
+                                    ${plan.precio}
+                                </strong>
+
+                            </div>
+
+                            <a
+                                class="comprar"
+                                href="${whatsapp}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                COMPRAR
+                            </a>
+
+                        </div>
+                    `;
+                });
+            }
 
             tarjeta.innerHTML = `
                 <div class="imagen-producto">
