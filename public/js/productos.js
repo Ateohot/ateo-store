@@ -27,14 +27,6 @@ function mostrarProductos(productos) {
                     planesHTML = `
                         <div class="plan">
 
-                            <div class="plan-info">
-
-                                <span>
-                                    GRATIS
-                                </span>
-
-                            </div>
-
                             <a
                                 class="comprar"
                                 href="${producto.urlGratis}"
