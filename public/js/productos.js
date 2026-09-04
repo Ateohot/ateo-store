@@ -25,7 +25,7 @@ function mostrarProductos(productos) {
                 if (producto.urlGratis) {
 
                     planesHTML = `
-                        <div class="plan">
+                        <div class="plan" style="justify-content: center;">
 
                             <a
                                 class="comprar"
