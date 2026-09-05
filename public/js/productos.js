@@ -532,8 +532,13 @@ async function compartirProducto(producto) {
 
     if (!producto) return;
 
+    const tipoProducto = producto.gratis
+        ? "🎁 GRATIS"
+        : "💰 DE PAGO";
+
     const texto =
-        `🔥 ${producto.nombre}\n\n` +
+        `🔥 ${producto.nombre}\n` +
+        `${tipoProducto}\n\n` +
         `${producto.descripcion || "Producto disponible en ATEO STORE."}\n\n` +
         `ATEO STORE`;
 
