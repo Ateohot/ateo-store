@@ -132,6 +132,8 @@ body {
     margin-top: 25px;
     margin-bottom: 40px;
 
+    white-space: pre-line;
+
     animation: textoEntrada 1.4s ease forwards;
 }
 
