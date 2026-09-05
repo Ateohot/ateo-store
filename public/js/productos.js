@@ -106,7 +106,7 @@ function mostrarProductos(productos) {
 
                     ${
                         producto.descripcion
-                            ? `<p>${producto.descripcion}</p>`
+                            ? `<p class="descripcion">${producto.descripcion}</p>`
                             : ""
                     }
 
