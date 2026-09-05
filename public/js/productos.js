@@ -541,7 +541,7 @@ async function compartirProducto(producto) {
         title: producto.nombre,
         text: texto,
         url:
-            `${window.location.origin}/producto/${producto.id}`
+            `https://ateo-store.skixm-13.workers.dev/producto/${producto.id}`
     };
 
     try {
