@@ -119,6 +119,228 @@ export default {
       );
     }
 
+    // =========================
+    // PÁGINA COMPARTIBLE DE PRODUCTO
+    // =========================
+
+    if (
+      url.pathname.startsWith("/producto/") &&
+      request.method === "GET"
+    ) {
+      try {
+        const id = url.pathname.substring("/producto/".length);
+
+        if (!/^\d+$/.test(id)) {
+          return new Response("Producto no válido", {
+            status: 400,
+            headers: {
+              "Content-Type": "text/plain; charset=UTF-8"
+            }
+          });
+        }
+
+        const resultado = await env.DB
+          .prepare(
+            "SELECT id, nombre, descripcion, imagen FROM productos WHERE id = ?"
+          )
+          .bind(Number(id))
+          .first();
+
+        if (!resultado) {
+          return new Response("Producto no encontrado", {
+            status: 404,
+            headers: {
+              "Content-Type": "text/plain; charset=UTF-8"
+            }
+          });
+        }
+
+        const escaparHTML = (valor) =>
+          String(valor || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+
+        const nombre = escaparHTML(resultado.nombre);
+        const descripcion = escaparHTML(
+          String(resultado.descripcion || "")
+            .replace(/\s+/g, " ")
+            .trim()
+        );
+
+        const imagen = resultado.imagen || "";
+        const catalogoURL =
+          `${url.origin}/catalogo.html#producto-${resultado.id}`;
+
+        const titulo = `${resultado.nombre} | ATEO STORE`;
+
+        const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>${escaparHTML(titulo)}</title>
+
+  <meta
+    name="description"
+    content="${descripcion}"
+  >
+
+  <meta
+    property="og:type"
+    content="product"
+  >
+
+  <meta
+    property="og:title"
+    content="${escaparHTML(titulo)}"
+  >
+
+  <meta
+    property="og:description"
+    content="${descripcion}"
+  >
+
+  <meta
+    property="og:image"
+    content="${escaparHTML(imagen)}"
+  >
+
+  <meta
+    property="og:url"
+    content="${escaparHTML(url.href)}"
+  >
+
+  <meta
+    property="og:site_name"
+    content="ATEO STORE"
+  >
+
+  <meta
+    name="twitter:card"
+    content="summary_large_image"
+  >
+
+  <meta
+    name="twitter:title"
+    content="${escaparHTML(titulo)}"
+  >
+
+  <meta
+    name="twitter:description"
+    content="${descripcion}"
+  >
+
+  <meta
+    name="twitter:image"
+    content="${escaparHTML(imagen)}"
+  >
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #080808;
+      color: white;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    main {
+      width: min(90%, 420px);
+      padding: 24px;
+    }
+
+    img {
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      border-radius: 18px;
+    }
+
+    h1 {
+      margin: 20px 0 10px;
+    }
+
+    p {
+      opacity: .75;
+      white-space: pre-line;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 13px 20px;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+
+    ${
+      imagen
+        ? `<img src="${escaparHTML(imagen)}" alt="${nombre}">`
+        : ""
+    }
+
+    <h1>${nombre}</h1>
+
+    ${
+      descripcion
+        ? `<p>${descripcion}</p>`
+        : ""
+    }
+
+    <a href="${escaparHTML(catalogoURL)}">
+      VER PRODUCTO EN ATEO STORE
+    </a>
+
+  </main>
+
+
+</body>
+</html>`;
+
+        return new Response(html, {
+          status: 200,
+          headers: {
+            "Content-Type": "text/html; charset=UTF-8",
+            "Cache-Control": "public, max-age=60"
+          }
+        });
+
+      } catch (error) {
+
+        return new Response(
+          "Error al generar producto: " +
+          String(error?.message || error),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "text/plain; charset=UTF-8"
+            }
+          }
+        );
+      }
+    }
+
+
     if (url.pathname === "/api/login" && request.method === "POST") {
       try {
         const body = await request.json();
