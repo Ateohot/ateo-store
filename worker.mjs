@@ -170,7 +170,15 @@ export default {
             .trim()
         );
 
-        const imagen = resultado.imagen || "";
+        const imagenOriginal = String(resultado.imagen || "").trim();
+
+        const imagen = imagenOriginal
+          ? new URL(
+              imagenOriginal,
+              url.origin + "/"
+            ).href
+          : "";
+
         const catalogoURL =
           `${url.origin}/catalogo.html#producto-${resultado.id}`;
 
