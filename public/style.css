@@ -2245,3 +2245,91 @@ footer {
         color 0.35s ease,
         box-shadow 0.35s ease;
 }
+
+
+/* ==================================================
+   ATEO STORE — VISTA CLÁSICA DEL CATÁLOGO
+   ================================================== */
+
+#productos[data-vista="clasico"] {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(280px, 1fr)
+        ) !important;
+
+    gap: 25px !important;
+
+    width: 100% !important;
+
+    position: relative !important;
+
+    padding: 8px 0 4px !important;
+
+    overflow: visible !important;
+}
+
+#productos[data-vista="clasico"] .producto {
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    max-width: none !important;
+
+    flex: none !important;
+
+    cursor: default;
+
+    touch-action: auto;
+
+    box-sizing: border-box;
+}
+
+#productos[data-vista="clasico"] .imagen-producto {
+    width: 100% !important;
+
+    height: auto !important;
+
+    min-height: 0 !important;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden !important;
+}
+
+#productos[data-vista="clasico"] .imagen-producto img {
+    width: 100% !important;
+
+    height: 100% !important;
+
+    max-width: 100% !important;
+
+    max-height: 100% !important;
+
+    object-fit: contain !important;
+}
+
+/* Ocultar elementos exclusivos del carrusel */
+
+#productos[data-vista="clasico"] .producto-indicador,
+#productos[data-vista="clasico"] .carrusel-flecha,
+#productos[data-vista="clasico"]::after {
+    display: none !important;
+}
+
+/* En clásico no necesitamos efectos de desplazamiento */
+
+#productos[data-vista="clasico"] .producto {
+    scroll-snap-align: none !important;
+}
+
+@media (max-width: 600px) {
+
+    #productos[data-vista="clasico"] {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+}

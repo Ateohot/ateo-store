@@ -564,23 +564,27 @@ export default {
       try {
         let configuracion = await env.DB
           .prepare(
-            "SELECT tema FROM configuracion_tienda WHERE id = 1"
+            "SELECT tema, vista FROM configuracion_tienda WHERE id = 1"
           )
           .first();
 
         if (!configuracion) {
           await env.DB
             .prepare(
-              "INSERT INTO configuracion_tienda (id, tema) VALUES (1, 'neon')"
+              "INSERT INTO configuracion_tienda (id, tema, vista) VALUES (1, 'neon', 'carrusel')"
             )
             .run();
 
-          configuracion = { tema: "neon" };
+          configuracion = {
+            tema: "neon",
+            vista: "carrusel"
+          };
         }
 
         return Response.json({
           ok: true,
-          tema: configuracion.tema
+          tema: configuracion.tema,
+          vista: configuracion.vista || "carrusel"
         });
 
       } catch (error) {
@@ -608,6 +612,11 @@ export default {
           "premium"
         ];
 
+        const vistasPermitidas = [
+          "carrusel",
+          "clasico"
+        ];
+
         if (!temasPermitidos.includes(body.tema)) {
           return Response.json(
             {
@@ -618,20 +627,36 @@ export default {
           );
         }
 
+        if (!vistasPermitidas.includes(body.vista)) {
+          return Response.json(
+            {
+              ok: false,
+              mensaje: "Vista de catálogo no válida"
+            },
+            { status: 400 }
+          );
+        }
+
         await env.DB
           .prepare(`
-            INSERT INTO configuracion_tienda (id, tema)
-            VALUES (1, ?)
+            INSERT INTO configuracion_tienda (id, tema, vista)
+            VALUES (1, ?, ?)
             ON CONFLICT(id)
-            DO UPDATE SET tema = excluded.tema
+            DO UPDATE SET
+              tema = excluded.tema,
+              vista = excluded.vista
           `)
-          .bind(body.tema)
+          .bind(
+            body.tema,
+            body.vista
+          )
           .run();
 
         return Response.json({
           ok: true,
           mensaje: "Diseño de tienda actualizado",
-          tema: body.tema
+          tema: body.tema,
+          vista: body.vista
         });
 
       } catch (error) {

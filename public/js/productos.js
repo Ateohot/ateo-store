@@ -3,22 +3,219 @@ const WHATSAPP = "50586058362";
 let productosDisponibles = [];
 let productosMostrados = [];
 let productoActual = 0;
+let vistaCatalogo = "carrusel";
 
 let inicioToqueX = 0;
 let inicioToqueY = 0;
 
 
 /* ==================================================
+   CONFIGURACIÓN DE VISTA
+   ================================================== */
+
+async function cargarConfiguracionVista() {
+
+    try {
+
+        const respuesta =
+            await fetch("/api/configuracion");
+
+        if (!respuesta.ok) {
+            throw new Error(
+                "Error HTTP " + respuesta.status
+            );
+        }
+
+        const datos =
+            await respuesta.json();
+
+        if (
+            datos.ok &&
+            (
+                datos.vista === "carrusel" ||
+                datos.vista === "clasico"
+            )
+        ) {
+            vistaCatalogo = datos.vista;
+        }
+
+    } catch (error) {
+
+        console.warn(
+            "No se pudo cargar la vista del catálogo:",
+            error
+        );
+
+        vistaCatalogo = "carrusel";
+    }
+}
+
+
+/* ==================================================
    CARRUSEL PRINCIPAL
    ================================================== */
 
+function mostrarProductosClasico(productos) {
+
+    const contenedor =
+        document.getElementById("productos");
+
+    if (!contenedor) return;
+
+    productosMostrados = productos;
+
+    contenedor.dataset.vista = "clasico";
+
+    if (!productosMostrados.length) {
+        contenedor.innerHTML =
+            "<p>No se encontraron productos.</p>";
+        return;
+    }
+
+    contenedor.innerHTML = "";
+
+    productos.forEach(producto => {
+
+        const tarjeta =
+            document.createElement("article");
+
+        tarjeta.className =
+            "producto";
+
+        let planesHTML = "";
+
+        if (producto.gratis) {
+
+            if (producto.urlGratis) {
+
+                planesHTML = `
+                    <div class="plan" style="justify-content: center;">
+
+                        <a
+                            class="comprar"
+                            href="${producto.urlGratis}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            OBTENER GRATIS
+                        </a>
+
+                    </div>
+                `;
+            }
+
+        } else {
+
+            const precios =
+                Array.isArray(producto.precios)
+                    ? producto.precios
+                    : [];
+
+            precios.forEach(plan => {
+
+                const mensaje =
+                    `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
+
+                const whatsapp =
+                    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+
+                planesHTML += `
+                    <div class="plan">
+
+                        <div class="plan-info">
+
+                            <span>
+                                ${plan.duracion}
+                            </span>
+
+                            <strong>
+                                ${plan.precio}
+                            </strong>
+
+                        </div>
+
+                        <a
+                            class="comprar"
+                            href="${whatsapp}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            COMPRAR
+                        </a>
+
+                    </div>
+                `;
+            });
+        }
+
+        tarjeta.innerHTML = `
+            <div class="imagen-producto">
+
+                <img
+                    src="${producto.imagen}"
+                    alt="${producto.nombre}"
+                    onerror="this.style.display='none'"
+                >
+
+            </div>
+
+            <div class="producto-info">
+
+                <span class="categoria">
+                    MEMBRESÍA
+                </span>
+
+                <h2>
+                    ${producto.nombre}
+                </h2>
+
+                ${
+                    producto.descripcion
+                        ? `<p class="descripcion">${producto.descripcion}</p>`
+                        : ""
+                }
+
+                <div class="planes">
+                    ${planesHTML}
+                </div>
+
+                ${
+                    producto.tiktok &&
+                    producto.tiktok !== "#"
+                        ? `
+                            <a
+                                href="${producto.tiktok}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                VER VIDEO
+                            </a>
+                          `
+                        : ""
+                }
+
+            </div>
+        `;
+
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+
 function mostrarProductos(productos) {
+
+    if (vistaCatalogo === "clasico") {
+        mostrarProductosClasico(productos);
+        return;
+    }
 
     const contenedor = document.getElementById("productos");
 
     if (!contenedor) return;
 
     productosMostrados = productos;
+
+    contenedor.dataset.vista = "carrusel";
 
     if (!productosMostrados.length) {
         contenedor.innerHTML = "<p>No se encontraron productos.</p>";
@@ -721,6 +918,8 @@ function abrirProductoDesdeHash() {
 async function cargarProductos() {
 
     try {
+
+        await cargarConfiguracionVista();
 
         const respuesta =
             await fetch("/api/productos");
