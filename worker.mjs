@@ -553,6 +553,99 @@ export default {
       }
     }
 
+    // =========================
+    // CONFIGURACIÓN DE TIENDA
+    // =========================
+
+    if (
+      url.pathname === "/api/configuracion" &&
+      request.method === "GET"
+    ) {
+      try {
+        let configuracion = await env.DB
+          .prepare(
+            "SELECT tema FROM configuracion_tienda WHERE id = 1"
+          )
+          .first();
+
+        if (!configuracion) {
+          await env.DB
+            .prepare(
+              "INSERT INTO configuracion_tienda (id, tema) VALUES (1, 'neon')"
+            )
+            .run();
+
+          configuracion = { tema: "neon" };
+        }
+
+        return Response.json({
+          ok: true,
+          tema: configuracion.tema
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            ok: false,
+            mensaje: "Error al obtener configuración",
+            error: String(error?.message || error)
+          },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (
+      url.pathname === "/api/configuracion" &&
+      request.method === "PUT"
+    ) {
+      try {
+        const body = await request.json();
+
+        const temasPermitidos = [
+          "neon",
+          "cyberpunk",
+          "premium"
+        ];
+
+        if (!temasPermitidos.includes(body.tema)) {
+          return Response.json(
+            {
+              ok: false,
+              mensaje: "Tema no válido"
+            },
+            { status: 400 }
+          );
+        }
+
+        await env.DB
+          .prepare(`
+            INSERT INTO configuracion_tienda (id, tema)
+            VALUES (1, ?)
+            ON CONFLICT(id)
+            DO UPDATE SET tema = excluded.tema
+          `)
+          .bind(body.tema)
+          .run();
+
+        return Response.json({
+          ok: true,
+          mensaje: "Diseño de tienda actualizado",
+          tema: body.tema
+        });
+
+      } catch (error) {
+        return Response.json(
+          {
+            ok: false,
+            mensaje: "Error al guardar configuración",
+            error: String(error?.message || error)
+          },
+          { status: 500 }
+        );
+      }
+    }
+
     return env.ASSETS.fetch(request);
   }
 };

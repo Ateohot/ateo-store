@@ -1994,3 +1994,254 @@ body.modal-abierto {
 
 }
 
+
+
+/* =========================================================
+   ATEO STORE — SISTEMA DE TEMAS
+   ========================================================= */
+
+/* ---------- NEON RGB ---------- */
+
+body[data-tema="neon"] {
+    background: #050505;
+    color: #ffffff;
+}
+
+body[data-tema="neon"] .header {
+    background: rgba(5, 5, 5, 0.95);
+    border-bottom-color: #242424;
+}
+
+body[data-tema="neon"] .logo-header,
+body[data-tema="neon"] .inicio-link {
+    color: #ffffff;
+}
+
+body[data-tema="neon"] .producto {
+    background: #101010;
+    border-color: #242424;
+}
+
+body[data-tema="neon"] .producto::after {
+    background: linear-gradient(
+        90deg,
+        #ff004c,
+        #ff8a00,
+        #ffe600,
+        #00ff88,
+        #00d9ff,
+        #7a00ff,
+        #ff00c8,
+        #ff004c
+    );
+    background-size: 300% 100%;
+    opacity: 0.55;
+}
+
+
+/* ---------- CYBERPUNK ---------- */
+
+body[data-tema="cyberpunk"] {
+    background:
+        radial-gradient(circle at 20% 20%, rgba(0, 229, 255, 0.08), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 170, 0.08), transparent 30%),
+        #07000d;
+    color: #f5f5ff;
+}
+
+body[data-tema="cyberpunk"] .header {
+    background: rgba(7, 0, 13, 0.96);
+    border-bottom: 1px solid #ff00aa;
+    box-shadow: 0 0 18px rgba(255, 0, 170, 0.25);
+}
+
+body[data-tema="cyberpunk"] .logo-header,
+body[data-tema="cyberpunk"] .inicio-link {
+    color: #00e5ff;
+}
+
+body[data-tema="cyberpunk"] .logo-header:hover,
+body[data-tema="cyberpunk"] .inicio-link:hover {
+    color: #ff00aa;
+}
+
+body[data-tema="cyberpunk"] .titulo p {
+    color: #ff00aa;
+    text-shadow: 0 0 12px rgba(255, 0, 170, 0.7);
+}
+
+body[data-tema="cyberpunk"] .titulo h1 {
+    color: #00e5ff;
+    text-shadow:
+        0 0 8px rgba(0, 229, 255, 0.8),
+        0 0 25px rgba(0, 229, 255, 0.35);
+}
+
+body[data-tema="cyberpunk"] .producto {
+    background:
+        linear-gradient(145deg, rgba(16, 0, 28, 0.98), rgba(4, 10, 18, 0.98));
+    border-color: #35134d;
+    box-shadow:
+        0 0 12px rgba(0, 229, 255, 0.08),
+        inset 0 0 20px rgba(255, 0, 170, 0.025);
+}
+
+body[data-tema="cyberpunk"] .producto::after {
+    background: linear-gradient(
+        90deg,
+        #00e5ff,
+        #0066ff,
+        #ff00aa,
+        #9d00ff,
+        #00e5ff
+    );
+    background-size: 300% 100%;
+    opacity: 0.8;
+    filter: blur(0.8px);
+}
+
+body[data-tema="cyberpunk"] .categoria {
+    color: #00e5ff;
+}
+
+body[data-tema="cyberpunk"] .comprar,
+body[data-tema="cyberpunk"] .btn-principal {
+    background: linear-gradient(
+        90deg,
+        #00e5ff,
+        #008cff
+    );
+    color: #050505;
+    box-shadow: 0 0 18px rgba(0, 229, 255, 0.35);
+}
+
+body[data-tema="cyberpunk"] .comprar:hover,
+body[data-tema="cyberpunk"] .btn-principal:hover {
+    box-shadow:
+        0 0 12px rgba(0, 229, 255, 0.8),
+        0 0 30px rgba(255, 0, 170, 0.35);
+}
+
+body[data-tema="cyberpunk"] .buscador-productos {
+    border-color: #00e5ff;
+    box-shadow: 0 0 14px rgba(0, 229, 255, 0.12);
+}
+
+body[data-tema="cyberpunk"] input#busquedaProductos {
+    color: #ffffff;
+}
+
+body[data-tema="cyberpunk"] footer {
+    border-top-color: #35134d;
+}
+
+
+/* ---------- PREMIUM ---------- */
+
+body[data-tema="premium"] {
+    background:
+        radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08), transparent 35%),
+        #070707;
+    color: #f4f0e6;
+}
+
+body[data-tema="premium"] .header {
+    background: rgba(7, 7, 7, 0.97);
+    border-bottom: 1px solid #8c6b24;
+}
+
+body[data-tema="premium"] .logo-header,
+body[data-tema="premium"] .inicio-link {
+    color: #d4af37;
+}
+
+body[data-tema="premium"] .logo-header:hover,
+body[data-tema="premium"] .inicio-link:hover {
+    color: #f2d675;
+}
+
+body[data-tema="premium"] .titulo p {
+    color: #d4af37;
+    letter-spacing: 3px;
+}
+
+body[data-tema="premium"] .titulo h1 {
+    color: #f4f0e6;
+    text-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
+}
+
+body[data-tema="premium"] .producto {
+    background:
+        linear-gradient(145deg, #111111, #080808);
+    border-color: #3d321b;
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.45),
+        inset 0 0 25px rgba(212, 175, 55, 0.025);
+}
+
+body[data-tema="premium"] .producto::after {
+    background: linear-gradient(
+        90deg,
+        #6f5318,
+        #d4af37,
+        #f7e7a6,
+        #d4af37,
+        #6f5318
+    );
+    background-size: 300% 100%;
+    opacity: 0.65;
+    filter: blur(0.6px);
+}
+
+body[data-tema="premium"] .categoria {
+    color: #d4af37;
+}
+
+body[data-tema="premium"] .comprar,
+body[data-tema="premium"] .btn-principal {
+    background: linear-gradient(
+        135deg,
+        #d4af37,
+        #f1d77a,
+        #b88918
+    );
+    color: #111111;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.2);
+}
+
+body[data-tema="premium"] .comprar:hover,
+body[data-tema="premium"] .btn-principal:hover {
+    box-shadow:
+        0 0 18px rgba(212, 175, 55, 0.35),
+        0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+body[data-tema="premium"] .buscador-productos {
+    border-color: #6f5318;
+}
+
+body[data-tema="premium"] input#busquedaProductos {
+    color: #f4f0e6;
+}
+
+body[data-tema="premium"] footer {
+    border-top-color: #3d321b;
+}
+
+
+/* ---------- TRANSICIONES ---------- */
+
+body,
+.header,
+.producto,
+.buscador-productos,
+.btn-principal,
+.comprar,
+footer {
+    transition:
+        background 0.35s ease,
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        color 0.35s ease,
+        box-shadow 0.35s ease;
+}
