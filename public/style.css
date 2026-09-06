@@ -2333,3 +2333,136 @@ footer {
     }
 
 }
+
+/* ==================================================
+   ATEO STORE — TARJETAS UNIFORMES VISTA CLÁSICA
+   ================================================== */
+
+#productos[data-vista="clasico"] {
+    align-items: stretch !important;
+}
+
+#productos[data-vista="clasico"] .producto {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    min-height: 0 !important;
+}
+
+#productos[data-vista="clasico"] .imagen-producto {
+    flex: 0 0 220px !important;
+    height: 220px !important;
+    aspect-ratio: auto !important;
+}
+
+#productos[data-vista="clasico"] .imagen-producto img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+#productos[data-vista="clasico"] .producto-info {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+#productos[data-vista="clasico"] .planes {
+    margin-top: auto !important;
+}
+
+@media (max-width: 600px) {
+
+    #productos[data-vista="clasico"] .imagen-producto {
+        flex-basis: 210px !important;
+        height: 210px !important;
+    }
+
+}
+
+
+/* ==================================================
+   ATEO STORE — ALTURA EXACTAMENTE IGUAL EN TARJETAS
+   ================================================== */
+
+#productos[data-vista="clasico"] .producto {
+    height: 620px !important;
+    min-height: 620px !important;
+    max-height: 620px !important;
+}
+
+#productos[data-vista="clasico"] .producto-info {
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+#productos[data-vista="clasico"] .descripcion {
+    overflow: hidden !important;
+}
+
+@media (max-width: 600px) {
+
+    #productos[data-vista="clasico"] .producto {
+        height: 620px !important;
+        min-height: 620px !important;
+        max-height: 620px !important;
+    }
+
+}
+
+
+/* ==================================================
+   ATEO STORE — PRUEBA DEFINITIVA TARJETAS CLÁSICAS
+   ================================================== */
+
+#productos[data-vista="clasico"] {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+}
+
+#productos[data-vista="clasico"] > .producto {
+    width: 100% !important;
+    height: 650px !important;
+    min-height: 650px !important;
+    max-height: 650px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#productos[data-vista="clasico"] > .producto > .imagen-producto {
+    width: 100% !important;
+    height: 230px !important;
+    min-height: 230px !important;
+    max-height: 230px !important;
+    flex: 0 0 230px !important;
+}
+
+#productos[data-vista="clasico"] > .producto > .producto-info {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+}
+
+@media (max-width: 900px) {
+
+    #productos[data-vista="clasico"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #productos[data-vista="clasico"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    #productos[data-vista="clasico"] > .producto {
+        height: 620px !important;
+        min-height: 620px !important;
+        max-height: 620px !important;
+    }
+
+}
+
