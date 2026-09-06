@@ -56,151 +56,45 @@ async function cargarConfiguracionVista() {
    ================================================== */
 
 function mostrarProductosClasico(productos) {
-
-    const contenedor =
-        document.getElementById("productos");
-
+    const contenedor = document.getElementById("productos");
     if (!contenedor) return;
 
     productosMostrados = productos;
-
     contenedor.dataset.vista = "clasico";
 
     if (!productosMostrados.length) {
-        contenedor.innerHTML =
-            "<p>No se encontraron productos.</p>";
+        contenedor.innerHTML = "<p>No se encontraron productos.</p>";
         return;
     }
 
     contenedor.innerHTML = "";
 
     productos.forEach(producto => {
+        const tarjeta = document.createElement("article");
 
-        const tarjeta =
-            document.createElement("article");
-
-        tarjeta.className =
-            "producto";
-
-        let planesHTML = "";
-
-        if (producto.gratis) {
-
-            if (producto.urlGratis) {
-
-                planesHTML = `
-                    <div class="plan" style="justify-content: center;">
-
-                        <a
-                            class="comprar"
-                            href="${producto.urlGratis}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            OBTENER GRATIS
-                        </a>
-
-                    </div>
-                `;
-            }
-
-        } else {
-
-            const precios =
-                Array.isArray(producto.precios)
-                    ? producto.precios
-                    : [];
-
-            precios.forEach(plan => {
-
-                const mensaje =
-                    `Hola, quiero comprar ${producto.nombre} por ${plan.duracion}. Precio: ${plan.precio}`;
-
-                const whatsapp =
-                    `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-
-                planesHTML += `
-                    <div class="plan">
-
-                        <div class="plan-info">
-
-                            <span>
-                                ${plan.duracion}
-                            </span>
-
-                            <strong>
-                                ${plan.precio}
-                            </strong>
-
-                        </div>
-
-                        <a
-                            class="comprar"
-                            href="${whatsapp}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            COMPRAR
-                        </a>
-
-                    </div>
-                `;
-            });
-        }
+        tarjeta.className = "producto producto-clasico-simple";
 
         tarjeta.innerHTML = `
             <div class="imagen-producto">
-
                 <img
                     src="${producto.imagen}"
                     alt="${producto.nombre}"
                     onerror="this.style.display='none'"
                 >
-
             </div>
 
             <div class="producto-info">
-
-                <span class="categoria">
-                    MEMBRESÍA
-                </span>
-
-                <h2>
-                    ${producto.nombre}
-                </h2>
-
-                ${
-                    producto.descripcion
-                        ? `<p class="descripcion">${producto.descripcion}</p>`
-                        : ""
-                }
-
-                <div class="planes">
-                    ${planesHTML}
-                </div>
-
-                ${
-                    producto.tiktok &&
-                    producto.tiktok !== "#"
-                        ? `
-                            <a
-                                href="${producto.tiktok}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                VER VIDEO
-                            </a>
-                          `
-                        : ""
-                }
-
+                <h2>${producto.nombre}</h2>
             </div>
         `;
 
         contenedor.appendChild(tarjeta);
+
+        tarjeta.addEventListener("click", () => {
+            abrirProducto(producto);
+        });
     });
 }
-
 
 function mostrarProductos(productos) {
 
@@ -843,7 +737,48 @@ function crearModal() {
     });
 
 
-    /* Swipe dentro del modal */
+    /* Arrastre vertical del bottom sheet en vista clásica */
+
+    let inicioSheetY = 0;
+    let movimientoSheetY = 0;
+
+    modal.addEventListener("touchstart", event => {
+
+        if (!modal.classList.contains("activo")) return;
+        if (vistaCatalogo !== "clasico") return;
+        if (event.touches.length !== 1) return;
+
+        inicioSheetY = event.touches[0].clientY;
+        movimientoSheetY = 0;
+
+    }, { passive: true });
+
+    modal.addEventListener("touchmove", event => {
+
+        if (!modal.classList.contains("activo")) return;
+        if (vistaCatalogo !== "clasico") return;
+        if (event.touches.length !== 1) return;
+
+        movimientoSheetY =
+            event.touches[0].clientY - inicioSheetY;
+
+    }, { passive: true });
+
+    modal.addEventListener("touchend", event => {
+
+        if (!modal.classList.contains("activo")) return;
+        if (vistaCatalogo !== "clasico") return;
+
+        if (movimientoSheetY > 100) {
+            cerrarProducto();
+        }
+
+        movimientoSheetY = 0;
+
+    }, { passive: true });
+
+
+    /* Swipe horizontal dentro del modal */
 
     modal.addEventListener("touchstart", event => {
 
