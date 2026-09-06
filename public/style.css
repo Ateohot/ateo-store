@@ -2660,17 +2660,17 @@ footer {
 
 #productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto {
     width: 100% !important;
-    height: 150px !important;
-    min-height: 150px !important;
-    max-height: 150px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     flex: none !important;
     overflow: hidden;
 }
 
 #productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     display: block;
 }
 
@@ -2689,9 +2689,9 @@ footer {
 
 @media (max-width: 600px) {
     #productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto {
-        height: 135px !important;
-        min-height: 135px !important;
-        max-height: 135px !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
     }
 }
 
@@ -2710,9 +2710,9 @@ footer {
 
 #productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto {
     width: 100% !important;
-    height: 150px !important;
-    min-height: 150px !important;
-    max-height: 150px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     flex: none !important;
     overflow: hidden;
 }
@@ -2743,5 +2743,42 @@ footer {
         min-height: 135px !important;
         max-height: 135px !important;
     }
+}
+
+
+/* AJUSTE FINAL — CLÁSICA COMPACTA SIN ESPACIO VACÍO */
+
+#productos[data-vista="clasico"] > .producto.producto-clasico-simple {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    display: block !important;
+    overflow: hidden !important;
+}
+
+#productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    display: block !important;
+}
+
+#productos[data-vista="clasico"] > .producto.producto-clasico-simple > .imagen-producto img {
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+}
+
+#productos[data-vista="clasico"] > .producto.producto-clasico-simple > .producto-info {
+    padding: 8px 6px 10px !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+#productos[data-vista="clasico"] > .producto.producto-clasico-simple > .producto-info h2 {
+    margin: 0 !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
 }
 
